@@ -1,6 +1,6 @@
-[![github]](https://github.com/fuderis/rs-test-app)&ensp;
-[![crates-io]](https://crates.io/crates/test-app)&ensp;
-[![docs-rs]](https://docs.rs/test-app)
+[![github]](https://github.com/fuderis/rs-fuzzy-cmp)&ensp;
+[![crates-io]](https://crates.io/crates/fuzzy-cmp)&ensp;
+[![docs-rs]](https://docs.rs/fuzzy-cmp)
 
 [github]: https://img.shields.io/badge/github-8da0cb?style=for-the-badge&labelColor=555555&logo=github
 [crates-io]: https://img.shields.io/badge/crates.io-fc8d62?style=for-the-badge&labelColor=555555&logo=rust
