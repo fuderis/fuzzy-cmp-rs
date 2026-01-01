@@ -1,0 +1,15 @@
+[package]
+name = "fuzzy-cmp"
+description = "Fuzzy string matching library using Levenshtein distance."
+keywords = ["fuzzy", "search", "compare", "filter"]
+categories = ["development-tools", "rust-patterns"]
+version = "0.1.0"
+authors = ["Bulat Sh. <t.me/fuderis>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/fuderis/rs-fuzzy-cmp"
+edition = "2024"
+
+[dependencies]
+distance = "0.4.0"
+macron = { version = "^0.1.13", features = ["derive"] }
