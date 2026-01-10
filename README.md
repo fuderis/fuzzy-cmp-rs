@@ -8,7 +8,7 @@
 
 # Fuzzy Compare
 
-Rust library for fuzzy string matching using Levenshtein distance. Returns results with similarity coefficient (0.0 = 0%, 1.0 = 100%) sorted from best to worst match.
+Rust library for fuzzy string matching using Levenshtein distance. Returns results with similarity coefficient (0.0 = 0%, 1.0 = 100%) sorted from best to worst match. Supports deep word search.
 
 
 ## Features:
