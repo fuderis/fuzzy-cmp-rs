@@ -5,7 +5,7 @@ fn main() {
         "Metallica Nothing Else Matters [Live].mp3",
         "Led Zeppelin - Stairway to Heaven.mp3",
     ];
-    let query = "metallica master puppets";
+    let query = "metallica puppets";
     let min_coef = 0.45;
     let results = fuzzy_cmp::search(&files, query, min_coef, true); // deep=true
     
