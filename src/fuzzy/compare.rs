@@ -71,5 +71,5 @@ pub fn deep_compare(s1: &str, s2: &str, min_coef: f32) -> f32 {
     let covered_count = covered.into_iter().filter(|&x| x).count();
     let coverage_coef = (covered_count as f32 / s2_len as f32).min(1.0);
     
-    (compare_coef + coverage_coef).min(1.0)
+    compare_coef + coverage_coef
 }

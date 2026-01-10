@@ -6,6 +6,7 @@ pub fn search<S>(v: &[S], s: &str, min_coef: f32, deep: bool) -> Vec<(f32, Strin
 where
     S: AsRef<str>
 {
+    // search in array:
     let mut results: Vec<(f32, String)> = v.iter()
         .map(|vs| {
             let vs = vs.as_ref().to_string();
@@ -16,6 +17,7 @@ where
         .filter(|(c, _)| *c >= min_coef)
         .collect();
 
+    // sort by coef:
     results.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
     results
 }
@@ -26,6 +28,7 @@ where
     T: Clone,
     F: Fn(&T) -> &str
 {
+    // search in array:
     let mut results: Vec<(f32, T)> = v.iter()
         .map(|item| {
             let vs = extract(item);
@@ -36,6 +39,7 @@ where
         .filter(|(c, _)| *c >= min_coef)
         .collect();
 
+    // sort by coef:
     results.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
     results
 }

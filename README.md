@@ -73,8 +73,8 @@ fn main() {
     // -> ]
     // -> Search query: metallica puppets
     // -> Results:
-    // ->   100.00% → Metallica - Master of Puppets [Live 2024].mp3
-    // ->   100.00% → Metallica - Master of Pupets [Remix].mp3
+    // ->   109.49% → Metallica - Master of Pupets [Remix].mp3
+    // ->   108.27% → Metallica - Master of Puppets [Live 2024].mp3
     // ->   61.17% → Metallica Nothing Else Matters [Live].mp3
 }
 ```
