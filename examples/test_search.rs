@@ -16,6 +16,6 @@ fn main() {
 
     println!("Results: ");
     for (coef, file) in results.iter().take(3) {
-        println!("  {:.0}% → {}", coef * 100.0, file);
+        println!("  {:.2}% → {}", coef * 100.0, file);
     }
 }
