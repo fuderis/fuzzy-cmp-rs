@@ -38,7 +38,7 @@ fn main() {
     // -> Coefficient: 0.4
     // -> String1: hello world
     // -> String2: hello my friend
-    // -> Result: 0.4577778 or 45.78%
+    // -> Result: 0.6244444 or 62.44%
 }
 ```
 
@@ -73,9 +73,9 @@ fn main() {
     // -> ]
     // -> Search query: metallica puppets
     // -> Results:
-    // ->   109.49% → Metallica - Master of Pupets [Remix].mp3
-    // ->   108.27% → Metallica - Master of Puppets [Live 2024].mp3
-    // ->   61.17% → Metallica Nothing Else Matters [Live].mp3
+    // ->   111.06% → Metallica - Master of Puppets [Live 2024].mp3
+    // ->   107.99% → Metallica - Master of Pupets [Remix].mp3
+    // ->   71.77% → Metallica Nothing Else Matters [Live].mp3
 }
 ```
 

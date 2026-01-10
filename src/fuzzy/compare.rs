@@ -33,10 +33,11 @@ pub fn deep_compare(s1: &str, s2: &str, min_coef: f32) -> f32 {
     // get len's:
     let s1_len = words1.len();
     let s2_len = words2.len();
+    let min_len = s1_len.min(s2_len);
     let max_len = s1_len.max(s2_len);
     
     let mut scores = vec![0f32; max_len];
-    let mut covered = vec![false; max_len];
+    let mut covered = vec![0f32; max_len];
     
     // compare words (s1 vs s2):
     for (i, word1) in words1.iter().take(max_len).enumerate() {
@@ -51,12 +52,12 @@ pub fn deep_compare(s1: &str, s2: &str, min_coef: f32) -> f32 {
                 score += 1.0;
             }
             
-            // update best score:
+            // update best compare score:
             best_score = best_score.max(score);
 
-            // add coverage score:
+            // update best coverage score:
             if coef >= min_coef {
-                covered[j] = true;
+                covered[j] = covered[j].max(coef);
             }
         }
         
@@ -68,8 +69,8 @@ pub fn deep_compare(s1: &str, s2: &str, min_coef: f32) -> f32 {
     let compare_coef = scores.iter().sum::<f32>() / max_score;
 
     // calc coverage scores:
-    let covered_count = covered.into_iter().filter(|&x| x).count();
-    let coverage_coef = (covered_count as f32 / s2_len as f32).min(1.0);
+    let max_score = 1.0 * min_len as f32;
+    let coverage_coef = covered.iter().sum::<f32>() / max_score;
     
     compare_coef + coverage_coef
 }

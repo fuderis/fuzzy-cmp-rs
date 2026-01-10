@@ -1,12 +1,10 @@
 fn main() {
     let files = vec![
-        "Metallica - Master of Puppets [Live 2024].mp3",
-        "Metallica - Master of Pupets [Remix].mp3",
-        "Metallica Nothing Else Matters [Live].mp3",
-        "Led Zeppelin - Stairway to Heaven.mp3",
+        "All Fires",
+        "Five Finger Death Punch"
     ];
-    let query = "metallica master puppets";
-    let min_coef = 0.45;
+    let query = "five finger";
+    let min_coef = 0.5;
     let results = fuzzy_cmp::search(&files, query, min_coef, true); // deep=true
     
     println!("Deep file search (coef {min_coef}):");
