@@ -22,7 +22,7 @@ Rust library for fuzzy string matching using Levenshtein distance. Returns resul
 
 ## Examples:
 
-### Compare strings:
+### Deep compare:
 ```rust
 fn main() {
     let s1 = "hello world";
@@ -51,7 +51,6 @@ fn main() {
         "Metallica Nothing Else Matters [Live].mp3",
         "Led Zeppelin - Stairway to Heaven.mp3"
     ];
-    
     let query = "metallica puppets";
     let min_coef = 0.45;
     let results = fuzzy_cmp::search(&files, query, min_coef, true); // deep=true
@@ -98,8 +97,10 @@ fn main() {
     let results = fuzzy_cmp::search_filter(&people, "Ali", 0.6, false, |p: &Person| &p.name);
     let best = &results[0];
     
-    println!("Best result: {best:?}");
+    println!("Best result: {:.2}% -> {:?}", best.0 * 100.0, best.1);
     assert_eq!(best.1, Person { name: "Alice".to_owned(), age: 30 });
+
+    // -> Best result: 60.00% -> Person { name: "Alice", age: 30 }
 }
 ```
 
