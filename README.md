@@ -1,4 +1,4 @@
-[![github]](https://github.com/fuderis/rs-fuzzy-cmp)&ensp;
+[![github]](https://github.com/fuderis/fuzzy-cmp-rs)&ensp;
 [![crates-io]](https://crates.io/crates/fuzzy-cmp)&ensp;
 [![docs-rs]](https://docs.rs/fuzzy-cmp)
 
@@ -6,113 +6,133 @@
 [crates-io]: https://img.shields.io/badge/crates.io-fc8d62?style=for-the-badge&labelColor=555555&logo=rust
 [docs-rs]: https://img.shields.io/badge/docs.rs-66c2a5?style=for-the-badge&labelColor=555555&logo=docs.rs
 
-# Fuzzy Compare
+# Fuzzy Compare 
 
-Rust library for fuzzy string matching using Levenshtein distance. Returns results with similarity coefficient (0.0 = 0%, 1.0 = 100%) sorted from best to worst match. Supports deep word search.
+Fast, lightweight fuzzy string comparison library for Rust with multiple similarity strategies:
+byte-level, word-level, Levenshtein-based, and hybrid scoring.<br>
 
+Designed for speed-first matching with optional deeper accuracy when needed.
 
 ## Features:
 
-* **Performance**: O(n × L²) where L is average string length.
-* **Case-insensitive**: With automatic lowercase conversion.
-* **Safe**: Handles empty strings, division by zero.
-* **Generic**: Works with any `Clone` type via closure.
-* **Sorting**: Descending sort by coefficient.
+* Very fast byte-level comparison (O(n))
+* Word-based fuzzy matching (no heavy allocations in hot path)
+* Levenshtein distance integration
+* Hybrid scoring (fast pre-check + smart fallback logic)
+* No heavy dependencies (only optional distance crate)
+* Case-insensitive matching built-in
 
+## Comparison Methods:
+
+1. Fast byte comparison
+
+Simple and extremely fast similarity check.
+
+Best for:
+* autocomplete
+* filtering
+* quick ranking
+
+```rust
+fast_compare(a, b)
+```
+
+Returns a value in range:
+
+```
+0.0 → completely different
+1.0 → identical
+```
+
+2. Word-based deep comparison
+
+Token-aware fuzzy matching without heavy allocations.
+
+```rust
+fast_deep_compare(a, b)
+```
+
+Best for:
+* search ranking
+* partial phrase matching
+* noisy user input
+
+3. Levenshtein similarity [feature lev]
+
+Classic edit-distance-based accuracy scoring.
+
+```rust
+lev_compare(a, b)
+```
+
+Best for:
+* typo correction
+* spelling similarity
+* canonical matching
+
+4. Hybrid comparison (recommended) [feature hybrid]
+
+Combines multiple strategies:
+* exact match shortcut
+* substring detection
+* token fuzzy scoring
+* Levenshtein fallback
+
+```rust
+hybrid_compare(a, b)
+```
+
+Best for:
+* search engines
+* recommendation systems
+* fuzzy deduplication
+* NLP preprocessing pipelines
 
 ## Examples:
 
-### Deep compare:
 ```rust
+use fuzzy_compare::*;
+
 fn main() {
-    let s1 = "hello world";
-    let s2 = "hello my friend";
-    let min_coef = 0.4;
-    let coef = fuzzy_cmp::deep_compare(s1, s2, min_coef);
+    let a = "hello world";
+    let b = "helo wrld";
 
-    println!("Coefficient: {min_coef}");
-    println!("String1: {s1}");
-    println!("String2: {s2}");
-    println!("Result: {coef} or {:.2}%", coef * 100.0);
+    println!("fast: {}", fast_compare(a, b));
+    println!("deep: {}", fast_deep_compare(a, b));
 
-    // -> Coefficient: 0.4
-    // -> String1: hello world
-    // -> String2: hello my friend
-    // -> Result: 0.6244444 or 62.44%
+    #[cfg(feature = "lev")]
+    println!("lev: {}", lev_compare(a, b));
+
+    #[cfg(feature = "hybrid")]
+    println!("hybrid: {}", hybrid_compare(a, b));
 }
 ```
 
-### Deep search:
-```rust
-fn main() {
-    let files = vec![
-        "Metallica - Master of Puppets [Live 2024].mp3",
-        "Metallica - Master of Pupets [Remix].mp3",
-        "Metallica Nothing Else Matters [Live].mp3",
-        "Led Zeppelin - Stairway to Heaven.mp3"
-    ];
-    let query = "metallica puppets";
-    let min_coef = 0.45;
-    let results = fuzzy_cmp::search(&files, query, min_coef, true); // deep=true
-    
-    println!("Deep file search (coef {min_coef}):");
-    println!("Search files: {files:#?}");
-    println!("Search query: {query}");
+## Performance Notes:
 
-    println!("Results: ");
-    for (coef, file) in results.iter().take(3) {
-        println!("  {:.2}% → {}", coef * 100.0, file);
-    }
+* **fast_compare:** is pure byte scan → extremely fast
+* **fast_deep_compare:** avoids heavy allocations in inner loop (except token split once per input)
+* **hybrid_compare:** short-circuits aggressively for speed (Levenshtein is only used when needed)
 
-    // -> Deep file search (coef 0.45):
-    // -> Search files: [
-    // ->     "Metallica - Master of Puppets [Live 2024].mp3",
-    // ->     "Metallica - Master of Pupets [Remix].mp3",
-    // ->     "Metallica Nothing Else Matters [Live].mp3",
-    // ->     "Led Zeppelin - Stairway to Heaven.mp3",
-    // -> ]
-    // -> Search query: metallica puppets
-    // -> Results:
-    // ->   108.27% → Metallica - Master of Puppets [Live 2024].mp3
-    // ->   102.35% → Metallica - Master of Pupets [Remix].mp3
-    // ->   61.17% → Metallica Nothing Else Matters [Live].mp3
-}
-```
+| Method            | Speed      | Accuracy | Use case           |
+| ----------------- | ---------- | -------- | ------------------ |
+| fast_compare      | ⚡⚡⚡⚡⚡ | Low      | filtering, ranking |
+| fast_deep_compare | ⚡⚡⚡⚡   | Medium   | search             |
+| lev_compare       | ⚡⚡       | High     | typo correction    |
+| hybrid_compare    | ⚡⚡⚡     | High     | production default |
 
-### Search struct:
-```rust
-#[derive(Debug, Clone, Eq, PartialEq)]
-struct Person {
-    name: String,
-    age: u32,
-}
+## Contributing:
 
-fn main() {
-    let people = vec![
-        Person { name: "Alice".to_owned(), age: 30 },
-        Person { name: "Bob".to_owned(), age: 25 },
-        Person { name: "Alicia".to_owned(), age: 28 },
-    ];
+Pull requests welcome. Focus areas:
 
-    let results = fuzzy_cmp::search_filter(&people, "Ali", 0.6, false, |p: &Person| &p.name);
-    let best = &results[0];
-    
-    println!("Best result: {:.2}% -> {:?}", best.0 * 100.0, best.1);
-    assert_eq!(best.1, Person { name: "Alice".to_owned(), age: 30 });
+* SIMD optimization
+* allocation reduction in token logic
+* configurable thresholds for hybrid scoring
+* Unicode-aware improvements
 
-    // -> Best result: 60.00% -> Person { name: "Alice", age: 30 }
-}
-```
+## License & Feedback:
 
+> This library distributed under the [MIT](https://github.com/fuderis/fuzzy-cmp-rs/blob/main/LICENSE.md) license.
 
-## Licensing:
-
-Distributed under the MIT license.
-
-
-## Feedback:
-
-You can [find me here](https://t.me/fuderis), also [see my channel](https://t.me/fuderis_club).
-I welcome your suggestions and feedback!
-
-> Copyright (c) 2025 *Bulat Sh.* ([fuderis](https://t.me/fuderis))
+You can contact me via [GitHub](https://github.com/fuderis) or send a message to my [E-Mail](mailto:synapdrake@ya.ru).
+This library is actively evolving, and your suggestions and feedback are always welcome!

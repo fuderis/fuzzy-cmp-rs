@@ -1,4 +1,4 @@
 #![allow(unused_imports)]
-pub use crate::{ fuzzy::*, error::{ StdResult, Result, Error } };
-
-pub(crate) use std::format as fmt;
+pub use std::result::Result as StdResult;
+pub type DynError = Box<dyn std::error::Error + Send + Sync + 'static>;
+pub type Result<T> = StdResult<T, DynError>;
