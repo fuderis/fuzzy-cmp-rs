@@ -4,10 +4,10 @@ description = "Fast, lightweight fuzzy string comparison library for Rust with m
 keywords = ["fuzzy", "search", "compare", "filter"]
 categories = ["development-tools", "rust-patterns"]
 version = "0.2.0"
-authors = ["Bulat Sh. <t.me/fuderis>"]
+authors = ["Bulat Sh. <synapdrake@ya.ru>"]
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/fuderis/rs-fuzzy-cmp"
+repository = "https://github.com/fuderis/fuzzy-cmp-rs"
 edition = "2024"
 
 [dependencies]
